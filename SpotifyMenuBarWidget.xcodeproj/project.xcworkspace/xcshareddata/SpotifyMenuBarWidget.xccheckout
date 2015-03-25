@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>E2D36440-BBBE-400E-8F81-93B472879A31</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SpotifyMenuBarWidget</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>09A2A55FF0A994AE95C644798A0F13D9455B3F68</key>
+		<string>https://github.com/twiddlemeister/whats-playing.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SpotifyMenuBarWidget.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>09A2A55FF0A994AE95C644798A0F13D9455B3F68</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/twiddlemeister/whats-playing.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>09A2A55FF0A994AE95C644798A0F13D9455B3F68</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>09A2A55FF0A994AE95C644798A0F13D9455B3F68</string>
+			<key>IDESourceControlWCCName</key>
+			<string>whats-playing</string>
+		</dict>
+	</array>
+</dict>
+</plist>
