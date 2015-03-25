@@ -9,9 +9,9 @@ This application runs an AppleScript to retrieve now playing information. Unfort
 To do this simply right click on Spotify.app in Applications and select "Show Package Contents". Go into the "Contents" folder and open "Info.plist". Ensure that the following keys are present and set to the following (should be located at the bottom of the file):
 
     <key>NSAppleScriptEnabled</key>
-	  <true/>
-	  <key>OSAScriptingDefinition</key>
-	  <string>applescript/Spotify.sdef</string>
+    <true/>
+    <key>OSAScriptingDefinition</key>
+    <string>applescript/Spotify.sdef</string>
 	  
 You will probably notice that the value for OSAScriptingDefinition is set to just "Spotify.sdef". This is the offending line. If it isn't then hurrah they've fixed it or you've meddled before.
 
