@@ -25,7 +25,7 @@ class DMPreferencesViewController: NSViewController {
     
     override init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        stepperValue = DMSettingsHelper.get(SettingKeys.PreferredFontSize) as Int
+        stepperValue = DMSettingsHelper.get(SettingKeys.PreferredFontSize) as! Int
     }
 
     required init?(coder: NSCoder) {
@@ -42,11 +42,11 @@ class DMPreferencesViewController: NSViewController {
     }
     
     private func populateFontPicker() {
-        var availableFamilies = NSFontManager.sharedFontManager().availableFontFamilies
-        var preferredFont = DMSettingsHelper.get(SettingKeys.PreferredFontFamily) as String
+        let availableFamilies = NSFontManager.sharedFontManager().availableFontFamilies
+        let preferredFont = DMSettingsHelper.get(SettingKeys.PreferredFontFamily) as! String
         
         for family:AnyObject in availableFamilies {
-            var familyString = family as String
+            let familyString = family as! String
             fontPicker.addItemWithObjectValue(familyString)
         }
         

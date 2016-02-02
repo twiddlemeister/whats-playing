@@ -15,9 +15,9 @@ class DMAppController: NSObject, NSUserInterfaceValidations, DMPreferencesViewCo
     private var trackString:String
     private var artistString:String
     private var selectedSource: SupportedPrograms!
+    private var timer: NSTimer?
     
     private var statusItem:NSStatusItem
-    private var timer: NSTimer?
     
     private var preferencesViewController: DMPreferencesViewController?
     private var windowController: NSWindowController?
@@ -43,21 +43,22 @@ class DMAppController: NSObject, NSUserInterfaceValidations, DMPreferencesViewCo
         
         rescheduleTimer()
         
-        var tag = DMSettingsHelper.get(SettingKeys.PreferredSource) as Int
+        let tag = DMSettingsHelper.get(SettingKeys.PreferredSource) as! Int
         selectedSource = SupportedPrograms(rawValue: tag)
         
         statusItem.target = self
-        statusItem.toolTip = "What's Playing by @twiddlemeister"
+        statusItem.highlightMode = true;
         statusItem.menu = createMenu()
+        statusItem.button?.toolTip = "What's Playing by @twiddlemeister"
         
-        var frame = NSRect(x: 0, y: 0, width: 500, height: 350)
-        var windowMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
-        var rect = NSWindow.contentRectForFrameRect(frame, styleMask: windowMask)
+        let frame = NSRect(x: 0, y: 0, width: 500, height: 350)
+        let windowMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
+        let rect = NSWindow.contentRectForFrameRect(frame, styleMask: windowMask)
         
         preferencesViewController = DMPreferencesViewController(nibName: "DMPreferencesViewController", bundle: NSBundle.mainBundle())
         preferencesViewController!.delegate = self
         
-        prefsWindow = NSWindow(contentRect: rect, styleMask: windowMask, backing: NSBackingStoreType.Buffered, defer: false)
+        prefsWindow = NSWindow(contentRect: rect, styleMask: windowMask, backing: NSBackingStoreType.Buffered, `defer`: false)
         prefsWindow!.title = "What's Playing Preferences"
         prefsWindow!.center()
         prefsWindow!.contentViewController = preferencesViewController
@@ -77,23 +78,23 @@ class DMAppController: NSObject, NSUserInterfaceValidations, DMPreferencesViewCo
     }
     
     func createMenu() -> NSMenu {
-        var menu = NSMenu(title: "What's Playing Menu")
+        let menu = NSMenu(title: "What's Playing Menu")
         
         menu.addItemWithTitle("Sources", action: nil, keyEquivalent: "")
         
-        var spotifyItem = NSMenuItem(title: "Spotify", action: Selector("sourceMenuItemClicked:"), keyEquivalent: "")
+        let spotifyItem = NSMenuItem(title: "Spotify", action: Selector("sourceMenuItemClicked:"), keyEquivalent: "")
         spotifyItem.target = self
         spotifyItem.tag = SupportedPrograms.Spotify.rawValue
         menu.addItem(spotifyItem)
         
-        var rdioItem = NSMenuItem(title: "Rdio", action: Selector("sourceMenuItemClicked:"), keyEquivalent: "")
-        rdioItem.target = self
-        rdioItem.tag = SupportedPrograms.Rdio.rawValue
-        menu.addItem(rdioItem)
+        let iTunesItem = NSMenuItem(title: "iTunes", action: Selector("sourceMenuItemClicked:"), keyEquivalent: "")
+        iTunesItem.target = self
+        iTunesItem.tag = SupportedPrograms.iTunes.rawValue
+        menu.addItem(iTunesItem)
         
         menu.addItem(NSMenuItem.separatorItem())
         
-        var prefsItem = NSMenuItem(title: "Configure...", action: Selector("prefsMenuItemClicked"), keyEquivalent: "")
+        let prefsItem = NSMenuItem(title: "Configure...", action: Selector("prefsMenuItemClicked"), keyEquivalent: "")
         prefsItem.target = self
         prefsItem.tag = 1004
         menu.addItem(prefsItem)
@@ -114,6 +115,22 @@ class DMAppController: NSObject, NSUserInterfaceValidations, DMPreferencesViewCo
         windowController?.showWindow(self)
     }
     
+    func getImageForSelectedSource() -> NSImage? {
+        var image:NSImage?
+        
+        if selectedSource == SupportedPrograms.Spotify {
+            image = NSImage(named: "Spotify")
+            image!.size = NSSize(width: 22, height: 16)
+        } else if selectedSource == SupportedPrograms.iTunes {
+            image = NSImage(named: "iTunes")
+            image!.size = NSSize(width: 22, height: 22)
+        } else {
+            image = nil
+        }
+        
+        return image
+    }
+    
     func getCurrentPlayingMetadata() {
         var descriptor:NSAppleEventDescriptor? = nil
         
@@ -128,12 +145,12 @@ class DMAppController: NSObject, NSUserInterfaceValidations, DMPreferencesViewCo
         
         var errorDictionary:NSDictionary?
         
-        var appleScript = NSAppleScript(source: scriptBody)
+        let appleScript = NSAppleScript(source: scriptBody)
         descriptor = appleScript?.executeAndReturnError(&errorDictionary)
         
         var resultString:String
         if descriptor != nil {
-            resultString = NSString(data: descriptor!.data, encoding: NSUTF8StringEncoding)!
+            resultString = descriptor!.stringValue!
             if resultString != "" {
                 let parts = resultString.componentsSeparatedByString("~")
                 trackString = parts[0]
@@ -147,19 +164,24 @@ class DMAppController: NSObject, NSUserInterfaceValidations, DMPreferencesViewCo
             artistString = "No artist"
         }
         
-        var fontFamily = DMSettingsHelper.get(SettingKeys.PreferredFontFamily) as String
-        var fontSize = DMSettingsHelper.get(SettingKeys.PreferredFontSize) as Int
+        let fontFamily = DMSettingsHelper.get(SettingKeys.PreferredFontFamily) as! String
+        let fontSize = DMSettingsHelper.get(SettingKeys.PreferredFontSize) as! Int
+        let font = NSFont(name: fontFamily, size: CGFloat(fontSize))!
         
-        var attributes = [NSFontAttributeName: NSFont(name: fontFamily, size: CGFloat(fontSize))!]
-        var attributedString = NSAttributedString(string: trackString + " • " + artistString, attributes: attributes)
-        statusItem.attributedTitle = attributedString
+        let trackInfoString = trackString + " • " + artistString
+        let attributes = [NSFontAttributeName: font]
+        let attributedString = NSAttributedString(string: trackInfoString, attributes: attributes)
+        
+        statusItem.button?.image = getImageForSelectedSource()
+        statusItem.button?.imagePosition = NSCellImagePosition.ImageLeft
+        statusItem.button?.attributedTitle = attributedString
     }
     
     /**
      * NSUserInterfaceValidations
      */
     override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
-        var tag = menuItem.tag
+        let tag = menuItem.tag
         
         if tag == selectedSource.rawValue {
             menuItem.state = NSOnState

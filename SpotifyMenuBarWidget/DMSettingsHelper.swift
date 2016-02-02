@@ -10,14 +10,12 @@ import Cocoa
 
 enum SupportedPrograms: Int {
     case Spotify
-    case Rdio
+    case iTunes
     
     func toString() -> String {
         switch self {
-        case Spotify:
-            return "Spotify"
-        case Rdio:
-            return "Rdio"
+            case Spotify: return "Spotify"
+            case iTunes: return "iTunes"
         }
     }
 }

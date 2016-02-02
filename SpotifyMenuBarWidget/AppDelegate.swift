@@ -10,7 +10,8 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
+    var statusItem:NSStatusItem!
+    
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         DMAppController.instance()
     }
