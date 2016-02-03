@@ -148,11 +148,11 @@ class DMAppController: NSObject, NSUserInterfaceValidations, DMPreferencesViewCo
         let appleScript = NSAppleScript(source: scriptBody)
         descriptor = appleScript?.executeAndReturnError(&errorDictionary)
         
-        var resultString:String
+        var resultString:String?
         if descriptor != nil {
-            resultString = descriptor!.stringValue!
-            if resultString != "" {
-                let parts = resultString.componentsSeparatedByString("~")
+            resultString = descriptor!.stringValue
+            if resultString != "" && resultString != nil {
+                let parts = resultString!.componentsSeparatedByString("~")
                 trackString = parts[0]
                 artistString = parts[1]
             } else {
